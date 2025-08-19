@@ -14,7 +14,7 @@ interface TerminalProps {
 }
 
 const Terminal: React.FC<TerminalProps> = ({ 
-  title = "Claude Web Buddy Terminal",
+  title = "Claude Web Buddy",
   initialLines = []
 }) => {
   const [lines, setLines] = useState<TerminalLine[]>([
@@ -88,19 +88,25 @@ const Terminal: React.FC<TerminalProps> = ({
       addLine('system', 'Available commands:');
       addLine('system', '  /clear - Clear terminal');
       addLine('system', '  /help - Show this help');
-      addLine('system', '  /models - List available models');
+      addLine('system', '  /models - List available models'); 
       addLine('system', '  /session - Show session info');
+      addLine('system', '  /code <language> - Generate code');
+      addLine('system', '  /review - Review current code');
+      addLine('system', '  /explain - Explain code concepts');
+      addLine('system', '  /debug - Debug assistance');
       addLine('system', '  q or ctrl+c - Exit');
       return;
     }
     
     if (command === '/models') {
-      addLine('system', 'Available models:');
-      addLine('system', '  • claude-sonnet-4 (current)');
-      addLine('system', '  • claude-opus-4');
-      addLine('system', '  • gpt-5');
-      addLine('system', '  • gpt-4.1');
-      addLine('system', '  • o4-mini');
+      addLine('system', 'Available AI models:');
+      addLine('success', '  ● claude-sonnet-4 (current) - Best for complex reasoning');
+      addLine('system', '  ○ claude-opus-4 - Most capable for difficult tasks');
+      addLine('system', '  ○ gpt-5 - Latest OpenAI flagship model');
+      addLine('system', '  ○ gpt-4.1 - Reliable and fast');
+      addLine('system', '  ○ o4-mini - Quick responses and coding');
+      addLine('system', '');
+      addLine('system', 'Use: /model <name> to switch models');
       return;
     }
     
@@ -117,29 +123,56 @@ const Terminal: React.FC<TerminalProps> = ({
       return;
     }
 
-    // Simulate AI thinking and response
+    // Enhanced AI processing simulation
     setIsThinking(true);
     
-    // Simulate AI processing time
+    // Simulate realistic AI processing time
     setTimeout(() => {
       setIsThinking(false);
       
-      // Add AI response based on command
+      // Enhanced command responses
       if (command.toLowerCase().includes('brainstorm') || command.toLowerCase().includes('fix')) {
         addLine('system', "● I'll search for information about this issue and brainstorm potential fixes.");
         addLine('success', `Fetch(https://github.com/anthropics/claude-code/issues/427)...`);
         addLine('system', '└ Received 286.3KB (200 OK)');
         addLine('system', "● Let me brainstorm potential fixes for implementing these prompt guidelines enforcement features in Claude CLI.");
         addLine('success', 'Search(pattern: "**/utils/permissions/**")...');
+        addLine('system', '└ Found 12 relevant files');
+        addLine('system', "● Here are some potential approaches:");
+        addLine('system', '  1. Implement role-based permission system');
+        addLine('system', '  2. Add command validation middleware');
+        addLine('system', '  3. Create user preference enforcement');
       } else if (command.toLowerCase().includes('explain')) {
         addLine('system', "● I'll analyze this codebase and explain its structure and functionality.");
         addLine('success', 'Analyzing project structure...');
-        addLine('system', 'This appears to be a web-based terminal interface for AI code assistance.');
+        addLine('system', '└ Scanning 47 files, 12,500 lines of code');
+        addLine('system', 'This is a React-based terminal interface that simulates CLI tools like Claude Code and OpenAI Codex.');
+        addLine('system', 'Key components: Terminal UI, command processing, AI response simulation.');
+      } else if (command.toLowerCase().includes('code')) {
+        addLine('system', `● Generating code for: ${command.replace('/code', '').trim()}`);
+        addLine('success', 'Initializing code generation...');
+        addLine('system', '└ Language detected, templates loaded');
+        addLine('system', "I'm ready to help you write code! What specifically would you like me to create?");
+      } else if (command.toLowerCase().includes('debug')) {
+        addLine('system', "● Debug mode activated");
+        addLine('success', 'Scanning for common issues...');
+        addLine('system', '└ No immediate errors detected');
+        addLine('system', "Share your code or error message and I'll help debug it!");
+      } else if (command.toLowerCase().includes('review')) {
+        addLine('system', "● Code review mode");
+        addLine('success', 'Preparing analysis tools...');
+        addLine('system', '└ Ready to review code quality, security, and performance');
+        addLine('system', "Paste your code and I'll provide a detailed review!");
       } else {
         addLine('system', `● Processing: "${command}"`);
-        addLine('system', 'How can I help you with your code today?');
+        addLine('system', "I'm your AI coding assistant. I can help you:");
+        addLine('system', "  • Write and generate code");
+        addLine('system', "  • Debug and fix issues");
+        addLine('system', "  • Review and optimize code");
+        addLine('system', "  • Explain programming concepts");
+        addLine('system', "What would you like to work on?");
       }
-    }, 1000 + Math.random() * 2000);
+    }, 800 + Math.random() * 1500);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -197,31 +230,42 @@ const Terminal: React.FC<TerminalProps> = ({
         ref={terminalRef}
         className="flex-1 p-4 overflow-y-auto space-y-1"
       >
-        {lines.map((line) => (
-          <div key={line.id} className={`${getLineColor(line.type)} leading-relaxed`}>
+        {lines.map((line, index) => (
+          <div 
+            key={line.id} 
+            className={`${getLineColor(line.type)} leading-relaxed animate-fade-in`}
+            style={{ animationDelay: `${index * 50}ms` }}
+          >
             {getLinePrefix(line.type)}{line.content}
           </div>
         ))}
         
         {isThinking && (
-          <div className="text-muted-foreground">
+          <div className="text-muted-foreground animate-fade-in">
             <span className="animate-pulse">( ● ) Thinking...</span>
           </div>
         )}
         
         {/* Current Input Line */}
-        <div className="flex items-center">
-          <span className="text-primary mr-2">user</span>
+        <div className="flex items-center animate-fade-in">
+          <span className="text-primary mr-2 font-bold">user</span>
           <input
             ref={inputRef}
             type="text"
             value={currentInput}
             onChange={(e) => setCurrentInput(e.target.value)}
             onKeyPress={handleKeyPress}
-            className="flex-1 bg-transparent border-none outline-none text-foreground"
+            className="flex-1 bg-transparent border-none outline-none text-foreground caret-primary focus:ring-0"
             placeholder={isThinking ? "Please wait..." : "Type your message or command..."}
             disabled={isThinking}
+            autoComplete="off"
+            spellCheck={false}
           />
+          {!isThinking && (
+            <div className="text-muted-foreground text-xs animate-pulse">
+              ⏎
+            </div>
+          )}
         </div>
       </div>
 
