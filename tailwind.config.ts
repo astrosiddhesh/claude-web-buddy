@@ -63,15 +63,11 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
-				editor: {
-					background: 'hsl(var(--editor-background))',
-					foreground: 'hsl(var(--editor-foreground))',
-					selection: 'hsl(var(--editor-selection))',
-					comment: 'hsl(var(--editor-comment))',
-					keyword: 'hsl(var(--editor-keyword))',
-					string: 'hsl(var(--editor-string))',
-					number: 'hsl(var(--editor-number))',
-					function: 'hsl(var(--editor-function))'
+				terminal: {
+					green: 'hsl(var(--terminal-green))',
+					orange: 'hsl(var(--terminal-orange))',
+					blue: 'hsl(var(--terminal-blue))',
+					yellow: 'hsl(var(--terminal-yellow))'
 				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
